@@ -31,7 +31,7 @@ document.getElementById("design").addEventListener("change", e => {
     //let designSelect = document.querySelectorAll("#design option");
     let colorSelect = document.querySelectorAll("#color option");
 
-    for(let i = 0; i <= colorSelect.length; i++){
+    for(let i = 0; i < colorSelect.length; i++){
         colorSelect[i].style.display = "none";
 
         if(e.target.value === "js puns" && colorSelect[i].dataset.theme == "js puns"){
@@ -46,12 +46,23 @@ document.getElementById("design").addEventListener("change", e => {
 let actList = document.getElementById("activities");
 actList.addEventListener("change", e => {
     let totalCost = 0;
-    for(i=0; i < actList.querySelectorAll('input[type="checkbox"]').length; i++){
+    const checkBox = actList.querySelectorAll('input[type="checkbox"]');
+    const selectBox = e.target.dataset.dayAndTime;
+    for(i=0; i < checkBox.length; i++){
+        //console.log(checkBox[i].dataset.dayAndTime);
 
-        if(actList.querySelectorAll('input[type="checkbox"]')[i].checked){
-            //console.log(actList.querySelectorAll('input[type="checkbox"]')[i].checked);
-            totalCost += parseInt(actList.querySelectorAll('input[type="checkbox"]')[i].dataset.cost);
+        if(checkBox[i].checked){
+            totalCost += parseInt(checkBox[i].dataset.cost);
+            //console.log(checkBox[i].dataset.dayAndTime);
+            //console.log(selectBox);
+            //if(checkBox[i].dataset.dayAndTime === selectBox){
+                //console.log("Hello!");
+              //  checkbox[i].parentElement.classList.add("disabled");
+            //}
+        } else if(!checkBox[i].checked && checkBox[i].dataset.dayAndTime === selectBox){
+            checkbox[i].parentElement.classList.add("disabled");
         }
+       
     }
     document.getElementById("activities-cost").innerHTML = `Total: ${totalCost}`;
 });
@@ -209,4 +220,25 @@ document.querySelectorAll('#activities input').forEach(cx => {
     const active = document.querySelector('.focus');
     if (active) active.classList.remove('focus');
   })
+});
+
+//
+email.addEventListener("keyup", () => {
+    emailValidation(); 
+});
+
+name.addEventListener("keyup", () => {
+    nameValidation(); 
+});
+
+cc.addEventListener("keyup", () => {
+    ccValidation(); 
+});
+
+zip.addEventListener("keyup", () => {
+    zipValidation(); 
+});
+
+cvv.addEventListener("keyup", () => {
+    cvvValidation(); 
 });
