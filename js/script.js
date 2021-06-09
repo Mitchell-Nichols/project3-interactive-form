@@ -49,20 +49,25 @@ actList.addEventListener("change", e => {
     const checkBox = actList.querySelectorAll('input[type="checkbox"]');
     const selectBox = e.target.dataset.dayAndTime;
     for(i=0; i < checkBox.length; i++){
-        //console.log(checkBox[i].dataset.dayAndTime);
 
         if(checkBox[i].checked){
             totalCost += parseInt(checkBox[i].dataset.cost);
-            //console.log(checkBox[i].dataset.dayAndTime);
-            //console.log(selectBox);
-            //if(checkBox[i].dataset.dayAndTime === selectBox){
-                //console.log("Hello!");
-              //  checkbox[i].parentElement.classList.add("disabled");
-            //}
-        } else if(!checkBox[i].checked && checkBox[i].dataset.dayAndTime === selectBox){
-            checkbox[i].parentElement.classList.add("disabled");
         }
-       
+        if(!checkBox[i].checked && checkBox[i].dataset.dayAndTime === selectBox || document.getElementsByName("all")[0].checked){
+            e.target.parentElement.classList.remove("disabled");
+            checkBox[i].parentElement.classList.add("disabled");
+            if(!e.target.checked){
+                checkBox[i].parentElement.classList.remove("disabled");
+            }
+        } 
+        else{
+            e.target.parentElement.classList.remove("disabled");
+            checkBox[i].parentElement.classList.add("disabled");
+            if(!e.target.checked){
+                checkBox[i].parentElement.classList.remove("disabled");
+            }
+        }
+    
     }
     document.getElementById("activities-cost").innerHTML = `Total: ${totalCost}`;
 });
@@ -70,8 +75,6 @@ actList.addEventListener("change", e => {
 //Payment Section
 //Set Credit Card as default in dropbox
 const paymentList = document.getElementById("payment");
-
-//
 const creditcard = document.getElementById("credit-card");
 const paypal = document.getElementById("paypal");
 const bitcoin = document.getElementById("bitcoin");
@@ -104,9 +107,9 @@ const cc = document.getElementById("cc-num");
 const zip = document.getElementById("zip");
 const cvv = document.getElementById("cvv");
 
-//const failPass = 0;
-//Form order validation
 
+// if the validation failed (by getting the false value in paramter), show the css error
+// other wise show green check as passed true validation
 function validationPass(element){
     element.parentElement.classList.add("valid");
     element.parentElement.classList.remove("not-valid");
@@ -119,6 +122,7 @@ function validationFail(element){
     element.parentElement.lastElementChild.hint = true;
 }
 
+//test and valid inputs and return true if its valid. Otherwise false.
 const nameValidation = () => {
     const nameIsValid = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(name.value);
 
@@ -222,7 +226,7 @@ document.querySelectorAll('#activities input').forEach(cx => {
   })
 });
 
-//
+//Form inputs validation - send a live error message if its not invalid during typing
 email.addEventListener("keyup", () => {
     emailValidation(); 
 });
