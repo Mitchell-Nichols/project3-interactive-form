@@ -24,21 +24,27 @@ document.getElementById("title").addEventListener("change", e =>{
 //hide color selection
 const shirtColorOption = document.getElementById("shirt-colors");
 shirtColorOption.style.display = "none";
+//document.querySelectorAll("#design option")[0].defaultSelected = true;
 
 //show the color selection once the design option is selected
-document.getElementById("design").addEventListener("change", e => {
+document.getElementById("shirt-designs").addEventListener("change", e => {
     shirtColorOption.style.display = "";
     //let designSelect = document.querySelectorAll("#design option");
     let colorSelect = document.querySelectorAll("#color option");
-
+    //document.querySelectorAll("#design option")[0].defaultSelected = true;
     for(let i = 0; i < colorSelect.length; i++){
         colorSelect[i].style.display = "none";
+        const target = e.target.value;
+        const colorValue = colorSelect[i].dataset.theme;
 
-        if(e.target.value === "js puns" && colorSelect[i].dataset.theme == "js puns"){
+        if(colorValue === target){
+            colorSelect[i].selected = true;
             colorSelect[i].style.display = "";
-        } else if(e.target.value === "heart js" && colorSelect[i].dataset.theme == "heart js") {
-            colorSelect[i].style.display = "";
+        } else{
+            colorSelect[i].selected = false;
+            colorSelect[i].style.display = "none";
         }
+
     }
 });
 
@@ -81,6 +87,8 @@ const bitcoin = document.getElementById("bitcoin");
 
 //Listen for change action in the payment section
 paymentList.children[1].defaultSelected = true
+paypal.style.display = "none";
+bitcoin.style.display = "none";
 paymentList.addEventListener("change", e=> {
 
     //reset the payment dropbox
@@ -113,13 +121,13 @@ const cvv = document.getElementById("cvv");
 function validationPass(element){
     element.parentElement.classList.add("valid");
     element.parentElement.classList.remove("not-valid");
-    element.parentElement.lastElementChild.hint = false;
+    element.parentElement.lastElementChild.style.display = "none";
 }
 
 function validationFail(element){
     element.parentElement.classList.add("not-valid");
     element.parentElement.classList.remove("valid");
-    element.parentElement.lastElementChild.hint = true;
+    element.parentElement.lastElementChild.style.display = "block";
 }
 
 //test and valid inputs and return true if its valid. Otherwise false.
@@ -189,15 +197,16 @@ const cvvValidation = () => {
 };
 
 //Listen for submit button
+emailHint = document.getElementById("email-hint");
+nameHint = document.getElementById("name-hint");
+
 form.addEventListener('submit', e => {
     if(!nameValidation()){
         e.preventDefault();
-        console.log("Name cannot be empty or blank");
     }
 
     if(!emailValidation()){
         e.preventDefault();
-        console.log("Invalid Email Address");
     }
 
     if(!ccValidation()){
