@@ -1,4 +1,4 @@
-
+// Mitchell Nichols's Interactive Form project - 6/27/2021
 
 //focus on name field
 //https://www.w3schools.com/jsref/met_html_focus.asp
@@ -48,34 +48,48 @@ document.getElementById("shirt-designs").addEventListener("change", e => {
     }
 });
 
-//listen for change action in the activities section and add the cost of selected activity
+//listen for change action in the activities section
+const input_boxes = document.querySelectorAll("#activities-box input");
+const activities_box = document.querySelector("#activities-box");
 let actList = document.getElementById("activities");
-actList.addEventListener("change", e => {
-    let totalCost = 0;
-    const checkBox = actList.querySelectorAll('input[type="checkbox"]');
-    const selectBox = e.target.dataset.dayAndTime;
-    for(i=0; i < checkBox.length; i++){
+let set_activity_option;
 
-        if(checkBox[i].checked){
-            totalCost += parseInt(checkBox[i].dataset.cost);
-        }
-        if(!checkBox[i].checked && checkBox[i].dataset.dayAndTime === selectBox || document.getElementsByName("all")[0].checked){
-            e.target.parentElement.classList.remove("disabled");
-            checkBox[i].parentElement.classList.add("disabled");
-            if(!e.target.checked){
-                checkBox[i].parentElement.classList.remove("disabled");
+actList.addEventListener("click", (e) => {
+    set_activity_option = true;
+    let totalCost = 0;
+    const clickBox = e.target;
+    const eBoxData = e.target.getAttribute("data-day-and-time");
+
+    for (let i = 1; i < input_boxes.length; i++) {
+        const label = input_boxes[i].parentElement;
+        const boxData = input_boxes[i].getAttribute("data-day-and-time");
+
+        if(input_boxes[i].checked || clickBox.dataset.cost == 200){
+            if (clickBox.dataset.cost == 200){
+                totalCost = 200;
+
+                if (!document.getElementsByName("all")[0].checked){
+                    totalCost = 0;
+                    set_activity_option = false
+                }
+
+            } else {
+                totalCost += parseInt(input_boxes[i].dataset.cost);
             }
         } 
-        else{
-            e.target.parentElement.classList.remove("disabled");
-            checkBox[i].parentElement.classList.add("disabled");
-            if(!e.target.checked){
-                checkBox[i].parentElement.classList.remove("disabled");
-            }
-        }
-    
+
+        if(eBoxData === boxData && clickBox !== input_boxes[i] || clickBox.dataset.cost == 200){    
+            label.classList.add("disabled");
+            input_boxes[i].disabled = true;
+
+            if (!clickBox.checked) {
+                label.classList.remove("disabled");
+                input_boxes[i].disabled = false;
+                input_boxes[i].checked = false;
+            };
+        }  
+        document.getElementById("activities-cost").innerHTML = `Total: $${totalCost}`;
     }
-    document.getElementById("activities-cost").innerHTML = `Total: ${totalCost}`;
 });
 
 //Payment Section
@@ -89,6 +103,7 @@ const bitcoin = document.getElementById("bitcoin");
 paymentList.children[1].defaultSelected = true
 paypal.style.display = "none";
 bitcoin.style.display = "none";
+
 paymentList.addEventListener("change", e=> {
 
     //reset the payment dropbox
@@ -196,10 +211,7 @@ const cvvValidation = () => {
     return cvvIsValid;
 };
 
-//Listen for submit button
-emailHint = document.getElementById("email-hint");
-nameHint = document.getElementById("name-hint");
-
+//Listen for submit button. If one of those inputs are not valid, prevent submit.
 form.addEventListener('submit', e => {
     if(!nameValidation()){
         e.preventDefault();
@@ -209,19 +221,30 @@ form.addEventListener('submit', e => {
         e.preventDefault();
     }
 
-    if(!ccValidation()){
-        e.preventDefault();
-        console.log("Invaild Credit Card");
+    // Dont do the credit card validation if paypal or bitcoin is selected
+    if(document.getElementById("payment").value == "credit-card"){
+        if(!ccValidation()){
+            e.preventDefault();
+        }
+        if(!zipValidation()){
+            e.preventDefault();
+        }
+    
+        if(!cvvValidation()){
+            e.preventDefault();
+        }
     }
 
-    if(!zipValidation()){
+    //Add error if no activity selected
+    if(!set_activity_option){
         e.preventDefault();
-        console.log("Zip code needs 5 digit");
-    }
-
-    if(!cvvValidation()){
-        e.preventDefault();
-        console.log("cvv needs 3 digit");
+        activities_box.parentElement.classList.add("not-valid");
+        activities_box.parentElement.classList.remove("valid");
+        activities_box.parentElement.lastElementChild.style.display = "block";
+    }else if(set_activity_option){
+         activities_box.parentElement.classList.add("valid");
+         activities_box.parentElement.classList.remove("not-valid");
+         activities_box.parentElement.lastElementChild.style.display = "none";
     }
 });
 
