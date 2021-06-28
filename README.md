@@ -1,8 +1,24 @@
 # project3-interactive-form
 Team Tree House Project 3 - Form Validation
+Author: Mitchell Nichols
+Date: 6/27/21
 
-Real-time error message on form 's field boxes (Name, Email, Phone Number, and Credit card info).
-When typing in the field boxes, it will live show red X icon as invalid or empty. Otherwise will show green checkmark icon.
+
+**Form Validation**
+
+If see an error, the sumbit won't be allowed.
+
+Error is thrown if the name field box is blank after left the field box or press submit.
+
+Error is thrown if there is no @ in email field box after left the field box or press submit.
+
+Error is thrown if no activity is selected.
+  If an activity is selected, it will disable the other overlap activity with the same schedule.
+  If the main activity is selected, it will disable the all other activities.
+
+Credit Card validation won't happen if paypal or bitcoin is selected.
+
+If selected credit card, it will check the credit card number, ccv and zip. It will throw the error if its invalid after left the field box or submit.
 
 
 
