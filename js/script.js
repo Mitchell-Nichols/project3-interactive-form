@@ -59,34 +59,27 @@ actList.addEventListener("click", (e) => {
     let totalCost = 0;
     const clickBox = e.target;
     const eBoxData = e.target.getAttribute("data-day-and-time");
+    clickBox.parentElement.classList.remove('disabled');
 
-    for (let i = 1; i < input_boxes.length; i++) {
+    for (let i = 0; i < input_boxes.length; i++) {
         const label = input_boxes[i].parentElement;
         const boxData = input_boxes[i].getAttribute("data-day-and-time");
 
-        if(input_boxes[i].checked || clickBox.dataset.cost == 200){
-            if (clickBox.dataset.cost == 200){
-                totalCost = 200;
+        //calc the total of cost for activity
+        if(input_boxes[i].checked){
+            totalCost += parseInt(input_boxes[i].dataset.cost);
+        }
 
-                if (!document.getElementsByName("all")[0].checked){
-                    totalCost = 0;
-                    set_activity_option = false
-                }
+        //prevent overlapping activites
+        if(eBoxData === boxData && clickBox !== input_boxes[i]){ 
 
-            } else {
-                totalCost += parseInt(input_boxes[i].dataset.cost);
-            }
-        } 
-
-        if(eBoxData === boxData && clickBox !== input_boxes[i] || clickBox.dataset.cost == 200){    
-            label.classList.add("disabled");
-            input_boxes[i].disabled = true;
-
-            if (!clickBox.checked) {
-                label.classList.remove("disabled");
+            if(clickBox.checked){				
+                input_boxes[i].disabled = true;
+                input_boxes[i].parentNode.classList.add('disabled')
+            } else{
                 input_boxes[i].disabled = false;
-                input_boxes[i].checked = false;
-            };
+                input_boxes[i].parentNode.classList.remove('disabled');
+            }
         }  
         document.getElementById("activities-cost").innerHTML = `Total: $${totalCost}`;
     }
